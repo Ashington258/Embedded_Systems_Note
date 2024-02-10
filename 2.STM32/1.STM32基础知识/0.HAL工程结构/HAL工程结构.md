@@ -22,6 +22,9 @@
 ![Alt text](image-1.png)
 
 
+peripheral(外设)
+drivers(驱动)
+
 ## 2 单个文件结构  
 
 **我们可以展开每一个文件。方便知晓文件的结构**
