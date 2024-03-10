@@ -11,6 +11,7 @@
 经博主反复尝试和测试，这段代码最适合加在CubeMX自动生成后的usart.c文件的 / * USER CODE BEGIN 0 * / 和 / * USER CODE END 0 * / 中间
 
 ### **CUBEIDE**
+
 ```C
 #ifdef __GNUC__
 /* With GCC, small printf (option LD Linker->Libraries->Small printf
@@ -37,6 +38,7 @@ PUTCHAR_PROTOTYPE
 ```
 
 ### **KEIL**
+
 ```c
 /* USER CODE BEGIN 0 */
 #include <stdio.h>
