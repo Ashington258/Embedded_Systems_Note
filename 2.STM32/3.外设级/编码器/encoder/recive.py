@@ -29,6 +29,26 @@ def receive_motor_speed(port='/dev/ttyUSB0', baudrate=9600):
         # 当按下 Ctrl+C 时关闭串口
         ser.close()
 
+def extract_speed(data):
+    """
+    从传感器数据中提取速度数值
+
+    Args:
+        data (str): 传感器数据字符串，如 "Motor speed: 123.45 RPM"
+
+    Returns:
+        float: 提取的速度数值
+    """
+    # 提取速度数值部分
+    speed_str = data.split(":")[1].split()[0].strip()
+    # 将速度数值转换为浮点数
+    speed = float(speed_str)
+    return speed
+
+# # 测试函数
+# data = "Motor speed: 123.45 RPM"
+# speed = extract_speed(data)
+# print("Extracted speed:", speed)
 
 
 # 调用函数开始接收舵机速度数据
