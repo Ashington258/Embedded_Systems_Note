@@ -2,9 +2,10 @@
 Author: 小叶同学
 Date: 2024-03-16 20:52:11
 LastEditors: Please set LastEditors
-LastEditTime: 2024-03-16 20:57:20
+LastEditTime: 2024-03-16 21:02:15
 Description: 请填写简介
 '''
+
 import serial
 
 def receive_motor_speed(port='/dev/ttyUSB0', baudrate=9600):
@@ -24,6 +25,10 @@ def receive_motor_speed(port='/dev/ttyUSB0', baudrate=9600):
             
             # 打印接收到的数据
             print("Received:", data)
+
+            # 提取速度数值并打印
+            speed = extract_speed(data)
+            print("Extracted speed:", speed)
 
     except KeyboardInterrupt:
         # 当按下 Ctrl+C 时关闭串口
@@ -45,11 +50,6 @@ def extract_speed(data):
     speed = float(speed_str)
     return speed
 
-# # 测试函数
-# data = "Motor speed: 123.45 RPM"
-# speed = extract_speed(data)
-# print("Extracted speed:", speed)
-
-
-# 调用函数开始接收舵机速度数据
-receive_motor_speed()
+if __name__ == "__main__":
+    # 调用函数开始接收舵机速度数据
+    receive_motor_speed()
