@@ -1,8 +1,9 @@
 /*
- * encoder.c
- *
- *  Created on: Mar 9, 2024
- *      Author: 92148
+ * @Author: 小叶同学
+ * @Date: 2024-03-10 09:20:20
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-03-17 15:05:55
+ * @Description: 该程序用于四倍频编码器测量转速，并且使用串口返回。
  */
 
 #include "encoder.h"
