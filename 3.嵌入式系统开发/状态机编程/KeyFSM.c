@@ -39,9 +39,10 @@ typedef struct
 } Key;
 
 // 定义按键检测系统结构体
+#define MAX_KEYS 4
 typedef struct
 {
-    Key key; // 按键信息
+    Key keys[MAX_KEYS]; // 多个按键信息
     // 其他可能需要的变量
 } KeyDetectionSystem;
 
@@ -51,16 +52,19 @@ void updateKeyDetectionSystem(KeyDetectionSystem *system, bool isKeyPressed);
 
 int main()
 {
-    KeyDetectionSystem system;
+    KeyDetectionSystem system; // 对按键系统进行声明
     initKeyDetectionSystem(&system);
 
     // 模拟按键输入，实际情况下可能需要使用中断或轮询方式获取按键状态
-    bool isKeyPressed = false;
+    bool isKeyPressed[MAX_KEYS] = {false}; // 数组表示多个按键的按下状态
     while (1)
     {
         // 获取按键状态
         // 这里假设 isKeyPressed 是由外部更新得到的，true 表示按键按下，false 表示按键释放
-        updateKeyDetectionSystem(&system, isKeyPressed);
+        for (int i = 0; i < MAX_KEYS; ++i)
+        {
+            updateKeyDetectionSystem(&system, isKeyPressed[i]);
+        }
 
         // 在这里进行其他操作
     }
@@ -71,11 +75,14 @@ int main()
 // 初始化按键检测系统
 void initKeyDetectionSystem(KeyDetectionSystem *system)
 {
-    system->key.state = KEY_IDLE;
-    system->key.timestamp = 0;
-    system->key.isPressed = false;
-    system->key.isReleased = false;
-    system->key.isDoubleClicked = false;
+    for (int i = 0; i < MAX_KEYS; ++i)
+    {
+        system->keys[i].state = KEY_IDLE;
+        system->keys[i].timestamp = 0;
+        system->keys[i].isPressed = false;
+        system->keys[i].isReleased = false;
+        system->keys[i].isDoubleClicked = false;
+    }
     // 进行其他初始化
 }
 
@@ -83,45 +90,48 @@ void initKeyDetectionSystem(KeyDetectionSystem *system)
 void updateKeyDetectionSystem(KeyDetectionSystem *system, bool isKeyPressed)
 {
     // 根据当前按键状态执行相应的逻辑
-    switch (system->key.state)
+    for (int i = 0; i < MAX_KEYS; ++i)
     {
-    case KEY_IDLE:
-        // 如果检测到按键被按下，则将按键状态切换为按下状态，并记录按下的时间戳
-        if (isKeyPressed)
+        switch (system->keys[i].state)
         {
-            system->key.state = KEY_DOWN;
-            system->key.timestamp = time(NULL);
-            system->key.isPressed = true; // 标记按键为被按下状态
-        }
-        break;
-    case KEY_DOWN:
-        // 如果检测到按键被释放，则将按键状态切换回空闲状态，并标记按键为已释放状态
-        if (!isKeyPressed)
-        {
-            system->key.state = KEY_IDLE;
-            system->key.isPressed = false; // 标记按键为未被按下状态
-            system->key.isReleased = true; // 标记按键为已释放状态
-        }
-        else
-        {
-            // 如果按键仍然被按下且按下时间超过一定时间（例如1秒），则将按键状态切换为长按状态
-            time_t currentTime = time(NULL);
-            if (currentTime - system->key.timestamp >= 1)
+        case KEY_IDLE:
+            // 如果检测到按键被按下，则将按键状态切换为按下状态，并记录按下的时间戳
+            if (isKeyPressed)
             {
-                system->key.state = KEY_LONG_PRESS;
+                system->keys[i].state = KEY_DOWN;
+                system->keys[i].timestamp = time(NULL);
+                system->keys[i].isPressed = true; // 标记按键为被按下状态
             }
+            break;
+        case KEY_DOWN:
+            // 如果检测到按键被释放，则将按键状态切换回空闲状态，并标记按键为已释放状态
+            if (!isKeyPressed)
+            {
+                system->keys[i].state = KEY_IDLE;
+                system->keys[i].isPressed = false; // 标记按键为未被按下状态
+                system->keys[i].isReleased = true; // 标记按键为已释放状态
+            }
+            else
+            {
+                // 如果按键仍然被按下且按下时间超过一定时间（例如1秒），则将按键状态切换为长按状态
+                time_t currentTime = time(NULL);
+                if (currentTime - system->keys[i].timestamp >= 1)
+                {
+                    system->keys[i].state = KEY_LONG_PRESS;
+                }
+            }
+            break;
+        case KEY_LONG_PRESS:
+            // 如果检测到按键被释放，则将按键状态切换回空闲状态，并标记按键为已释放状态
+            if (!isKeyPressed)
+            {
+                system->keys[i].state = KEY_IDLE;
+                system->keys[i].isReleased = true; // 标记按键为已释放状态
+            }
+            break;
+        default:
+            break;
         }
-        break;
-    case KEY_LONG_PRESS:
-        // 如果检测到按键被释放，则将按键状态切换回空闲状态，并标记按键为已释放状态
-        if (!isKeyPressed)
-        {
-            system->key.state = KEY_IDLE;
-            system->key.isReleased = true; // 标记按键为已释放状态
-        }
-        break;
-    default:
-        break;
     }
 
     // 在这里可以继续扩展处理双击等其他按键状态
