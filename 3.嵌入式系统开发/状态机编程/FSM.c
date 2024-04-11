@@ -84,3 +84,9 @@ void setState(StateMachine *machine, State newState)
 {
     machine->currentState = newState;
 }
+
+#define PEOPLE_NUMBER 4 
+typedef struct 
+{
+    Person number[PEOPLE_NUMBER]; /* data */
+}numbers_state;
