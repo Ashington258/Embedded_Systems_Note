@@ -7,7 +7,12 @@ typedef enum
     pressing_bounce,
     release_bounce,
     PRESSED,
-    
+
 } Keystate;
+
+typedef struct
+{
+    
+};
 
 #endif
