@@ -9,8 +9,7 @@
 //         -这个枚举定义了按键的不同状态，如空闲、按下、消抖、短按、长按和双击状态。 -
 //     枚举提供了一种简洁的方式来表示不同的按键状态，让代码更易读和理解。
 
-//         2. *
-//         *Key 结构体： * *
+//  2. * *Key 结构体： * *
 //         -这个结构体用于表示单个按键的状态和相关信息。 -
 //     每个按键都有自己的状态、时间戳以及其他标记，如是否被按下、是否被释放、是否被双击等。这些信息是与每个按键相关的，因此需要一个结构体来存储。
 
@@ -52,7 +51,7 @@ void updateKeyDetectionSystem(KeyDetectionSystem *system, bool isKeyPressed);
 
 int main()
 {
-    KeyDetectionSystem system; // 对按键系统进行声明
+    KeyDetectionSystem system; // 对按键系统进行声明，利用结构体对按键进行批量化声明
     initKeyDetectionSystem(&system);
 
     // 模拟按键输入，实际情况下可能需要使用中断或轮询方式获取按键状态

@@ -65,3 +65,4 @@ void updateKeyDetectionSystem(KeyDetectionSystem *system, bool isKeyPressed)
 
     // 在这里可以继续扩展处理双击等其他按键状态
 }
+
