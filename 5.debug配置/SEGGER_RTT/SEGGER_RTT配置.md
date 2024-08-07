@@ -201,9 +201,12 @@ typedef enum {
 #endif
 
 ```
+
 格式化时间戳版本：
 ![alt text](image-6.png)
-```C
+
+```c
+
 #ifndef LOG_H
 #define LOG_H
 #include "SEGGER_RTT.h"
