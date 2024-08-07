@@ -43,48 +43,57 @@ SEGGER 官方提供的接口较为繁琐，所以往往可以使用 LOG.H 宏定
 **常规简易 LOG.H**
 
 ```c
-/*
- * Author: Jayant Tang
- * Email: jayant97@foxmail.com
- */
+#ifndef LOG_H
+#define LOG_H
 
-#ifndef _LOG_H_
-#define _LOH_H_
 #include "SEGGER_RTT.h"
 
-#define LOG_DEBUG 1
+// 日志级别定义
+#define LOG_LEVEL_NOLOG 0 // 无日志输出
+#define LOG_LEVEL_ERROR 1 // 只输出错误
+#define LOG_LEVEL_WARN 2  // 输出警告和错误
+#define LOG_LEVEL_INFO 3  // 输出信息、警告和错误
+#define LOG_LEVEL_DEBUG 4 // 输出调试信息、信息、警告和错误
 
-#if LOG_DEBUG
+// 设置当前日志级别
+#define LOG_LEVEL LOG_LEVEL_DEBUG
 
+// 常用文本颜色控制宏
+#define LOG_RESET RTT_CTRL_RESET
+#define LOG_RED RTT_CTRL_TEXT_RED
+#define LOG_GREEN RTT_CTRL_TEXT_GREEN
+#define LOG_YELLOW RTT_CTRL_TEXT_YELLOW
+#define LOG_BLUE RTT_CTRL_TEXT_BLUE
+#define LOG_MAGENTA RTT_CTRL_TEXT_MAGENTA
+#define LOG_CYAN RTT_CTRL_TEXT_CYAN
+#define LOG_WHITE RTT_CTRL_TEXT_WHITE
 
-#define LOG_PROTO(type,color,format,...)            \
-        SEGGER_RTT_printf(0,"  %s%s"format"\r\n%s", \
-                          color,                    \
-                          type,                     \
-                          ##__VA_ARGS__,            \
-                          RTT_CTRL_RESET)
-
-/* 清屏*/
-#define LOG_CLEAR() SEGGER_RTT_WriteString(0, "  "RTT_CTRL_CLEAR)
-
-/* 无颜色日志输出 */
-#define LOG(format,...) LOG_PROTO("","",format,##__VA_ARGS__)
-
-/* 有颜色格式日志输出 */
-#define LOGI(format,...) LOG_PROTO("INFO: ", RTT_CTRL_TEXT_BRIGHT_GREEN , format, ##__VA_ARGS__)
-#define LOGW(format,...) LOG_PROTO("WARN: ", RTT_CTRL_TEXT_BRIGHT_YELLOW, format, ##__VA_ARGS__)
-#define LOGE(format,...) LOG_PROTO("ERROR: ", RTT_CTRL_TEXT_BRIGHT_RED   , format, ##__VA_ARGS__)
-
+// 日志输出宏定义
+#if LOG_LEVEL >= LOG_LEVEL_DEBUG
+#define LOG(fmt, ...) SEGGER_RTT_printf(0, LOG_RESET "[DEBUG]: " fmt "\r\n", ##__VA_ARGS__)
 #else
-#define LOG_CLEAR()
-#define LOG
-#define LOGI
-#define LOGW
-#define LOGE
-
+#define LOG(fmt, ...)
 #endif
 
-#endif // !_LOG_H_
+#if LOG_LEVEL >= LOG_LEVEL_INFO
+#define LOG_INFO(fmt, ...) SEGGER_RTT_printf(0, LOG_GREEN "[INFO]: " fmt "\r\n", ##__VA_ARGS__)
+#else
+#define LOG_INFO(fmt, ...)
+#endif
+
+#if LOG_LEVEL >= LOG_LEVEL_WARN
+#define LOG_WARN(fmt, ...) SEGGER_RTT_printf(0, LOG_YELLOW "[WARN]: " fmt "\r\n", ##__VA_ARGS__)
+#else
+#define LOG_WARN(fmt, ...)
+#endif
+
+#if LOG_LEVEL >= LOG_LEVEL_ERROR
+#define LOG_ERROR(fmt, ...) SEGGER_RTT_printf(0, LOG_RED "[ERROR]: " fmt "\r\n", ##__VA_ARGS__)
+#else
+#define LOG_ERROR(fmt, ...)
+#endif
+
+#endif // LOG_H
 ```
 
 **带有时间戳的 LOG.H 文件**，==注意需要定义时间源!==
